@@ -12,10 +12,13 @@ import {
     View,
     Alert,
     DeviceEventEmitter,
+    NativeEventEmitter,
     ActivityIndicator
 } from 'react-native';
 
 import {NativeModules} from 'react-native'
+
+const myEventEmitter = new NativeEventEmitter(NativeModules.RNToastModule);
 
 const instructions = Platform.select({
     ios: 'Press Cmd+R to reload,\n' +
@@ -33,8 +36,13 @@ export default class App extends Component<{}> {
     }
 
     componentWillMount() {
-        DeviceEventEmitter.addListener('emittingEvent01', this.onEmittingEvents);
+        myEventEmitter.addListener('emittingEvent01', this.onEmittingEvents.bind(this));
+        //NativeEventEmitter.addListener('emittingEvent01', this.onEmittingEvents);
     }
+
+    componentWillUnmount(){
+        myEventEmitter.remove();
+    };
 
     render() {
         return (
@@ -135,7 +143,7 @@ export default class App extends Component<{}> {
         try {
              NativeModules.RNToastModule.newUIView((code) => {
                 Alert.alert(
-                    'onEmittingEvents:rejectCode:' + code,
+                    'onEmittingEvents:rejectCode:' + code.activity,
                     'onEmittingEvents:content:' + code,
                     [
                         {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
