@@ -41,7 +41,7 @@ export default class App extends Component<{}> {
     }
 
     componentWillUnmount(){
-        myEventEmitter.remove();
+        myEventEmitter.remove("emittingEvent01");
     };
 
     render() {

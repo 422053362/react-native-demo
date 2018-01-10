@@ -28,6 +28,13 @@ public class RNToastModule extends ReactContextBaseJavaModule {
 
     ArrayBlockingQueue<Object> mQueue = new ArrayBlockingQueue<Object>(1);
 
+    public ArrayBlockingQueue<Object> getQueue() {
+        if (mQueue == null) {
+            mQueue = new ArrayBlockingQueue<Object>(1);
+        }
+        return mQueue;
+    }
+
     private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
         @Override
         public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
@@ -37,7 +44,7 @@ public class RNToastModule extends ReactContextBaseJavaModule {
                 map.putString("newUIPromiseMsg02", "newUIPromiseMsg02");
                 map.putString("result", String.valueOf(resultCode));
                 map.putString("activity", activity.getLocalClassName());
-                mQueue.add(map);
+                getQueue().add(map);
                 //sendEvent(getReactApplicationContext(), "emittingEvent01", map);
             }
         }
@@ -93,7 +100,7 @@ public class RNToastModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void newUIView(Callback success, Callback error) {
+    public void newUIView(final Callback success, Callback error) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
             error.invoke(E_ACTIVITY_DOES_NOT_EXIST, "Activity doesn't exist");
@@ -102,7 +109,7 @@ public class RNToastModule extends ReactContextBaseJavaModule {
                 final Intent intent = new Intent();
                 intent.setClass(currentActivity, DemoUiViewActivity.class);
                 currentActivity.startActivityForResult(intent, REQUEST_CODE_DEMO_ACTIVITY_);
-                success.invoke(mQueue.take());
+                success.invoke(getQueue().take());
             } catch (Exception e) {
                 error.invoke(E_FAILED_TO_START_DEMO_ACTIVITY, e.getMessage());
             }
