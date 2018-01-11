@@ -26,9 +26,9 @@ import java.util.logging.Logger;
 
 public class RNToastModule extends ReactContextBaseJavaModule {
 
-    ArrayBlockingQueue<Object> mQueue = new ArrayBlockingQueue<Object>(1);
+    static ArrayBlockingQueue<Object> mQueue = new ArrayBlockingQueue<Object>(1);
 
-    public ArrayBlockingQueue<Object> getQueue() {
+    public final static ArrayBlockingQueue<Object> getQueue() {
         if (mQueue == null) {
             mQueue = new ArrayBlockingQueue<Object>(1);
         }
@@ -44,8 +44,7 @@ public class RNToastModule extends ReactContextBaseJavaModule {
                 map.putString("newUIPromiseMsg02", "newUIPromiseMsg02");
                 map.putString("result", String.valueOf(resultCode));
                 map.putString("activity", activity.getLocalClassName());
-                getQueue().add(map);
-                //sendEvent(getReactApplicationContext(), "emittingEvent01", map);
+                mQueue.add(map);
             }
         }
     };

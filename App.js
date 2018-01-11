@@ -143,8 +143,8 @@ export default class App extends Component<{}> {
         try {
              NativeModules.RNToastModule.newUIView((code) => {
                 Alert.alert(
-                    'onEmittingEvents:rejectCode:' + code.activity,
-                    'onEmittingEvents:content:' + code,
+                    'newUIView:rejectCode:' + code.activity,
+                    'newUIView:content:' + code,
                     [
                         {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
                         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
@@ -155,8 +155,8 @@ export default class App extends Component<{}> {
                 this.setState({animating: true});
             }, (code,msg) => {
                 Alert.alert(
-                    'onEmittingEvents:rejectCode:' + code,
-                    'onEmittingEvents:content:' + msg,
+                    'newUIView:rejectCode:' + code,
+                    'newUIView:content:' + msg,
                     [
                         {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
                         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
