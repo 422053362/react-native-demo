@@ -7,16 +7,37 @@
     "test": "jest"
   },
   "dependencies": {
+    "expo": "^24.0.2",
+    "prop-types": "^15.5.10",
     "react": "16.0.0",
-    "react-native": "0.51.0"
+    "react-native": "0.51.0",
+    "react-native-navigation": "^1.1.346",
+    "react-native-animatable": "^1.2.4"
   },
   "devDependencies": {
     "babel-jest": "22.0.4",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.0.4",
-    "react-test-renderer": "16.0.0"
+    "react-test-renderer": "16.0.0",
+    "flow-bin": "^0.56.0",
+    "jest-expo": "^24.0.0",
+    "react-native-scripts": "^1.5.0"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "jest-expo",
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "json",
+      "jsx",
+      "node"
+    ],
+    "modulePathIgnorePatterns": [
+      "/node_modules/.*/react-native/",
+      "/node_modules/.*/react/"
+    ],
+    "transformIgnorePatterns": [
+      "/node_modules/(?!react-native|react-navigation)/"
+    ]
   }
 }

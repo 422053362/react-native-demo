@@ -20,18 +20,13 @@ import {NativeModules} from 'react-native'
 
 const myEventEmitter = new NativeEventEmitter(NativeModules.RNToastModule);
 
-const instructions = Platform.select({
-    ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-    android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
 
-export default class App extends Component<{}> {
+export default class NativeModuleDemo extends Component<{}> {
     constructor(props) {
         super(props)
         this.state = {
-            animating: false
+            animating: false,
+            text: "sorry "
         }
     }
 
@@ -40,13 +35,17 @@ export default class App extends Component<{}> {
         //NativeEventEmitter.addListener('emittingEvent01', this.onEmittingEvents);
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         myEventEmitter.remove("emittingEvent01");
     };
 
     render() {
         return (
             <View style={styles.container}>
+                <Text style={styles.textBtn}
+                      onPress={()=>this.showIdCardDetection()}>
+                    android RN 调用身份真识别
+                </Text>
                 <Text style={styles.textBtn}
                       onPress={() => NativeModules.RNToastModule.showWithCallback("callback测试Toast", 3000, this.onDismissCallback)}>
                     android RN 调用原生组建callback
@@ -63,11 +62,9 @@ export default class App extends Component<{}> {
                       onPress={() => this.newUIView()}>
                     android RN => 开启一个新的Activity，并且获取返回结果
                 </Text>
-                <ActivityIndicator
-                    animating={this.state.animating}
-                    style={[styles.centering, {height: 80}]}
-                    size="large"
-                />
+                <Text style={styles.textBtn}>
+                    {this.state.text}
+                </Text>
             </View>
         );
     }
@@ -141,7 +138,8 @@ export default class App extends Component<{}> {
 
     newUIView() {
         try {
-             NativeModules.RNToastModule.newUIView((code) => {
+            this.setState({text: this.state.text + "start"});
+            NativeModules.RNToastModule.newUIView((code) => {
                 Alert.alert(
                     'newUIView:rejectCode:' + code.activity,
                     'newUIView:content:' + code,
@@ -152,8 +150,8 @@ export default class App extends Component<{}> {
                     ],
                     {cancelable: false}
                 )
-                this.setState({animating: true});
-            }, (code,msg) => {
+                this.setState({text: this.state.text + "yes#"});
+            }, (code, msg) => {
                 Alert.alert(
                     'newUIView:rejectCode:' + code,
                     'newUIView:content:' + msg,
@@ -164,12 +162,28 @@ export default class App extends Component<{}> {
                     ],
                     {cancelable: false}
                 )
-                this.setState({animating: true});
+                this.setState({text: "no"});
             });
 
         } catch (e) {
             console.info(e);
         }
+    }
+
+    showIdCardDetection() {
+        NativeModules.RNToastModule.showIdCardDetection(0, (imageData) => {
+            console.info("imageData:" + imageData);
+        }, (errorCode) => {
+            console.info("errorCode:" + errorCode);
+        });
+    }
+
+    showFaceDetection() {
+        NativeModules.RNToastModule.showFaceDetection(0, (imageData) => {
+            console.info("imageData:" + imageData);
+        }, (errorCode) => {
+            console.info("errorCode:" + errorCode);
+        });
     }
 }
 

@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.telecom.Call;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.BaseActivityEventListener;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -24,7 +26,7 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.Logger;
 
-public class RNToastModule extends ReactContextBaseJavaModule {
+public class RNToastModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
     static ArrayBlockingQueue<Object> mQueue = new ArrayBlockingQueue<Object>(1);
 
@@ -56,6 +58,7 @@ public class RNToastModule extends ReactContextBaseJavaModule {
     public RNToastModule(ReactApplicationContext reactContext) {
         super(reactContext);
         reactContext.addActivityEventListener(mActivityEventListener);
+        reactContext.addLifecycleEventListener(this);
     }
 
     @Override
@@ -116,12 +119,25 @@ public class RNToastModule extends ReactContextBaseJavaModule {
     }
 
     private void sendEvent(ReactContext reactContext, String eventName, @Nullable WritableMap params) {
-        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(eventName, params);
+        reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 
     public static final String E_ACTIVITY_DOES_NOT_EXIST = "activity_does_not_exist";
     public static final String E_FAILED_TO_START_DEMO_ACTIVITY = "failed_to_start_demo_activity";
     public static final int REQUEST_CODE_DEMO_ACTIVITY_ = 1000000;
 
+    @Override
+    public void onHostResume() {
+        Log.d("RNToastModule", "=========onHostResume=========");
+    }
+
+    @Override
+    public void onHostPause() {
+        Log.d("RNToastModule", "=========onHostPause=========");
+    }
+
+    @Override
+    public void onHostDestroy() {
+        Log.d("RNToastModule", "=========onHostDestroy=========");
+    }
 }
